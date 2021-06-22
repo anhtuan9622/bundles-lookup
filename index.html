@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bundles Lookup</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+	d3.csv("bundles.csv").then(function (data) {
+	//console.log(data);
+
+	var bundles = data;
+	var button = d3.select("#button");
+	var form = d3.select("#form");
+	button.on("click", runEnter);
+	form.on("submit", runEnter);
+
+  function runEnter() {
+    d3.select("tbody").html("")
+    d3.selectAll("p").classed('noresults', true).html("")
+    d3.event.preventDefault();
+    var inputElement = d3.select("#sku-input");
+    var inputValue = inputElement.property("value");
+
+    //console.log(inputValue.length);
+    var output = bundles.filter(bundles => bundles.bundle_sku === (inputValue));
+	
+    for (var i = 0; i < output.length; i++) {
+      //console.log(output[i]['bundle_sku'])
+      //d3.select("tbody>tr>td").text(output[i]['child_items']);
+      d3.select("tbody").insert("tr").html("<td><img width='100px' height='100px' src='"+(output[i]['child_image'])+"'</src></td><td>"+(output[i]['child_name'])+"</td><td>"+(output[i]['child_sku'])+"</td><td>"+(output[i]['child_quantity'])+" x</td>") 
+	  }
+  };
+  window.resizeTo(screen.width,screen.height)
+
+
+});
+</script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class=>Bundles Lookup</h1>
+				<form id="form" class="d-flex">
+					<input id="sku-input" class="form-control me-2" type="number" placeholder="Enter bundle item number (eg: 29704)">
+					<button id="button" class="btn btn-outline-primary">Search</button>
+				</form>
+				<table class="table" cellpadding="10">
+				<thead>
+				<tr>
+				<th scope="col">Image</th>
+				<th scope="col">Name</th>
+				<th scope="col">Item number</th>
+				<th scope="col">Quantity</th>
+				</tr>
+				</thead>
+				<tbody>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
